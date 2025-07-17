@@ -1,5 +1,5 @@
 {
-  "name": "fastapi-vercel-node",
+  "name": "edr-login",
   "version": "1.0.0",
   "main": "api/index.js",
   "scripts": {
