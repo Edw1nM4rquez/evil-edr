@@ -20,6 +20,17 @@ app.get("/auth", (req, res) => {
   res.sendFile(filePath);
 });
 
+// Ruta para descargar el archivo credenciales.txt
+app.get('/descargar', (req, res) => {
+  const filePath = path.join(__dirname, 'credenciales.txt');
+  res.download(filePath, 'credenciales.txt', (err) => {
+    if (err) {
+      console.error('Error al descargar el archivo:', err);
+      res.status(500).send('Error al descargar el archivo');
+    }
+  });
+});
+
 // Ruta para procesar el formulario
 app.post("/login", (req, res) => {
   const { usuario, clave } = req.body;
