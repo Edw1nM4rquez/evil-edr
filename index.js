@@ -50,7 +50,3 @@ app.post("/login", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
-
-
-module.exports = app;
-module.exports.handler = serverless(app); // 👈 NECESARIO para que Vercel lo ejecute
