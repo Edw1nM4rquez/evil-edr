@@ -1,26 +1,9 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/auth",
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/login",
-      "methods": [
-        "POST"
-      ],
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/edradminlogin_files/(.*)",
-      "dest": "/edradminlogin_files/$1"
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
