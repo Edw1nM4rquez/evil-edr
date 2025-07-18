@@ -4,3 +4,5 @@ __pycache__
 credentials.txt
 "credenciales.txt" 
 credenciales.txt
+.env
+*.log

